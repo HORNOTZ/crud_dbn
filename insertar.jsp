@@ -1,4 +1,5 @@
 <%@ page import="java.sql.*" %>
+<%@ page import="config.Conexion" %>
 <%
     String nombre = request.getParameter("nombre");
     String correo = request.getParameter("correo");
@@ -11,13 +12,9 @@
     PreparedStatement ps = null;
 
     try {
-        // Driver MySQL
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        con = DriverManager.getConnection(
-    "jdbc:mysql://bgbpxv1djuq8zjluwtza-mysql.services.clever-cloud.com:3306/bgbpxv1djuq8zjluwtza",
-    "ucp7tsvfxhqaihek",
-    "AjuDzaHxPIpQqx8H7Xws"
-);
+        // 🔹 Conexión a Clever Cloud usando Conexion.java
+        Conexion cn = new Conexion();
+        con = cn.getConnection();
 
         String sql = "INSERT INTO solicitudes (nombre, correo, telefono, sexo, direccion, fechaNacimiento) VALUES (?, ?, ?, ?, ?, ?)";
         ps = con.prepareStatement(sql);
@@ -34,12 +31,16 @@
         }
 
         ps.executeUpdate();
+
+        // 🔹 Cerrar recursos
+        ps.close();
         con.close();
 
-        // 🔹 Redirigir a listado.jsp después de insertar
+        // 🔹 Redirigir a listar.jsp después de insertar
         response.sendRedirect("listar.jsp");
 
-  } catch(Exception e) {
+    } catch(Exception e) {
+        e.printStackTrace(); // Mostrar error en consola
         // ❌ Si hay error, vuelve al formulario
         response.sendRedirect("index.jsp");
     }
