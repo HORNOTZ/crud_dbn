@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*" %>
+<%@ page import="config.Conexion" %>
 <%
     // Obtener el ID desde la URL
     String id = request.getParameter("id");
@@ -8,11 +9,14 @@
 
     if (id != null) {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/crud_dbn", "root", "");
+            // 🔹 Conexión a Clever Cloud
+            Conexion cn = new Conexion();
+            Connection con = cn.getConnection();
+
             PreparedStatement ps = con.prepareStatement("SELECT * FROM solicitudes WHERE id=?");
             ps.setInt(1, Integer.parseInt(id));
             ResultSet rs = ps.executeQuery();
+
             if (rs.next()) {
                 nombre = rs.getString("nombre");
                 correo = rs.getString("correo");
@@ -24,7 +28,12 @@
                     fechaNacimiento = fecha.toString();
                 }
             }
+
+            // Cerrar recursos
+            rs.close();
+            ps.close();
             con.close();
+
         } catch (Exception e) {
             out.println("<div class='alert alert-danger'>❌ Error: " + e.getMessage() + "</div>");
         }
@@ -44,33 +53,12 @@
             display: flex;
             align-items: center;
         }
-        .card {
-            border-radius: 20px;
-            overflow: hidden;
-            animation: fadeIn 1s ease-in-out;
-        }
-        .card-header {
-            background: linear-gradient(90deg, #007bff, #6610f2);
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-        .btn-success {
-            background: linear-gradient(90deg, #28a745, #20c997);
-            border: none;
-        }
-        .btn-success:hover {
-            background: linear-gradient(90deg, #20c997, #28a745);
-            transform: scale(1.05);
-            transition: all 0.3s ease;
-        }
-        .btn-secondary:hover {
-            transform: scale(1.05);
-            transition: all 0.3s ease;
-        }
-        @keyframes fadeIn {
-            from {opacity: 0; transform: translateY(-20px);}
-            to {opacity: 1; transform: translateY(0);}
-        }
+        .card { border-radius: 20px; overflow: hidden; animation: fadeIn 1s ease-in-out; }
+        .card-header { background: linear-gradient(90deg, #007bff, #6610f2); font-weight: bold; letter-spacing: 1px; }
+        .btn-success { background: linear-gradient(90deg, #28a745, #20c997); border: none; }
+        .btn-success:hover { background: linear-gradient(90deg, #20c997, #28a745); transform: scale(1.05); transition: all 0.3s ease; }
+        .btn-secondary:hover { transform: scale(1.05); transition: all 0.3s ease; }
+        @keyframes fadeIn { from {opacity: 0; transform: translateY(-20px);} to {opacity: 1; transform: translateY(0);} }
     </style>
 </head>
 <body>
@@ -119,12 +107,8 @@
                 </div>
 
                 <div class="d-flex justify-content-between mt-4">
-                    <a href="listar.jsp" class="btn btn-secondary btn-lg">
-                        ⬅️ Cancelar
-                    </a>
-                    <button type="submit" class="btn btn-success btn-lg">
-                        💾 Guardar Cambios
-                    </button>
+                    <a href="listar.jsp" class="btn btn-secondary btn-lg">⬅️ Cancelar</a>
+                    <button type="submit" class="btn btn-success btn-lg">💾 Guardar Cambios</button>
                 </div>
             </form>
         </div>
