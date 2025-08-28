@@ -13,7 +13,11 @@
     try {
         // Driver MySQL
         Class.forName("com.mysql.cj.jdbc.Driver");
-        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/crud_dbn", "root", "");
+        con = DriverManager.getConnection(
+    "jdbc:mysql://bgbpxv1djuq8zjluwtza-mysql.services.clever-cloud.com:3306/bgbpxv1djuq8zjluwtza",
+    "ucp7tsvfxhqaihek",
+    "AjuDzaHxPIpQqx8H7Xws"
+);
 
         String sql = "INSERT INTO solicitudes (nombre, correo, telefono, sexo, direccion, fechaNacimiento) VALUES (?, ?, ?, ?, ?, ?)";
         ps = con.prepareStatement(sql);
