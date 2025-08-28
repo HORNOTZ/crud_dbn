@@ -83,12 +83,10 @@
 <body>
 
 <div class="container mt-5 shadow-lg">
-    <!-- Título -->
     <h2 class="text-center mb-4">
         <i class="bi bi-people-fill"></i> Listado de Personas
     </h2>
 
-    <!-- Tabla -->
     <div class="table-responsive">
         <table class="table table-hover align-middle text-center shadow-sm">
             <thead>
@@ -105,6 +103,7 @@
             </thead>
             <tbody>
                 <%
+                    // 🔹 Conexión a Clever Cloud mediante Conexion.java
                     Conexion cn = new Conexion();
                     Connection con = cn.getConnection();
                     Statement st = con.createStatement();
@@ -121,14 +120,11 @@
                     <td><%= rs.getString("direccion") %></td>
                     <td><%= rs.getDate("fechaNacimiento") %></td>
                     <td>
-                        <!-- Botón Editar -->
                         <a href="editar.jsp?id=<%= rs.getInt("id") %>" 
                            class="btn btn-warning btn-sm"
                            onclick="return confirm('⚠️ ¿Seguro que quieres editar esta solicitud?')">
                            <i class="bi bi-pencil-square"></i> Editar
                         </a>
-
-                        <!-- Botón Eliminar -->
                         <a href="eliminar.jsp?id=<%= rs.getInt("id") %>" 
                            class="btn btn-danger btn-sm"
                            onclick="return confirm('❌ ¿Seguro que quieres eliminar esta solicitud?')">
@@ -136,19 +132,21 @@
                         </a>
                     </td>
                 </tr>
-                <% } %>
+                <% } 
+                    rs.close();
+                    st.close();
+                    con.close();
+                %>
             </tbody>
         </table>
     </div>
 
-    <!-- Botón para registrar nueva persona -->
     <div class="text-center mt-4">
         <a href="index.jsp" class="btn btn-success btn-lg shadow">
             <i class="bi bi-plus-circle"></i> Registrar Nueva Persona
         </a>
     </div>
 
-    <!-- Botones de navegación -->
     <div class="text-center mt-3">
         <a href="index.jsp" class="btn btn-secondary shadow">⬅️ Volver al Create</a>
     </div>
